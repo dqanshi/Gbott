@@ -55,9 +55,10 @@ async def message_handler(event):
                 entity, MessageEntityMention
             ):
                 return
+    if not await chatbotdb.find_one({"chat_id": event.chat_id}):
+        return
+
     if event.reply_to:
-        if not await chatbotdb.find_one({"chat_id": event.chat_id}):
-            return
         reply = await event.get_reply_message()
         if reply and reply.sender_id == BOT_ID:
             if event.media and isinstance(event.media, events.MediaDocument):
@@ -73,7 +74,7 @@ async def message_handler(event):
             elif event.text:
                 query = event.text
             if query:
-                response = await chatt(event, query)
+                response = await chatt(event, query, replied_to=reply.message)
                 if not response:
                     await event.reply(random.choice(random_response))
                     return
@@ -110,7 +111,9 @@ def read_from_file(file_path):
         return file.read()
 
 # @rate_limit(10, 60)
-async def chatt(event, query):
+async def chatt(event, query, replied_to=None):
+    if replied_to:
+        query = f"[Replied to: {replied_to}]\n{query}"
     response = model.generate_content(f"{details}, query: {query}")
     if response:
         return response.text
