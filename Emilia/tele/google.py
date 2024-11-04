@@ -1,15 +1,10 @@
-# DONE: Google
-
 from urllib.parse import quote
-
-from requests import get
-from telethon import *
+from requests import get, RequestException
+from telethon import Button
 from telethon.tl.types import *
-
 from Emilia.custom_filter import register
 from Emilia.helper.disable import disable
 from Emilia.utils.decorators import *
-
 
 @usage("/google [query]")
 @example("/google shinobinet on telegram")
@@ -18,7 +13,10 @@ from Emilia.utils.decorators import *
 @disable
 @exception
 async def google(event):
-    query = event.text.split(None, 1)[1]
+    try:
+        query = event.text.split(None, 1)[1]
+    except IndexError:
+        return await usage_string(event, google)
 
     if not query:
         return await usage_string(event, google)
@@ -32,15 +30,32 @@ async def google(event):
     search_results = []
 
     bing_search_url = f"https://api.akuari.my.id/search/bingsearch?query={q}"
-    bing_results = get(bing_search_url).json()
+    
+    try:
+        bing_response = get(bing_search_url)
+        bing_response.raise_for_status()  # Raises an exception for HTTP request errors
 
-    for result in bing_results.get("hasil", {}).get("results", [])[:20]:
-        title = result.get("title", "")
-        description = result.get("description", "")
-        url = result.get("url", "")
+        try:
+            bing_results = bing_response.json()
+        except ValueError:
+            await wait.delete()
+            return await event.reply("Failed to parse Bing search results. Please try again later.")
 
-        if description:
-            search_results.append(f"• [{title}]({url})\n__{description}__")
+        for result in bing_results.get("hasil", {}).get("results", [])[:20]:
+            title = result.get("title", "")
+            description = result.get("description", "")
+            url = result.get("url", "")
+
+            if description:
+                search_results.append(f"• [{title}]({url})\n__{description}__")
+
+    except RequestException as e:
+        await wait.delete()
+        return await event.reply(f"Failed to retrieve Bing search results: {e}")
+
+    if not search_results:
+        await wait.delete()
+        return await event.reply(f"No search results found for **{query}**.")
 
     meow = (
         f"**Search results of {query.replace('%20', ' ')} on the internet:**\n\n"
@@ -52,3 +67,4 @@ async def google(event):
     except errors.ChatWriteForbiddenError:
         await event.reply(meow, link_preview=False)
     await wait.delete()
+    
