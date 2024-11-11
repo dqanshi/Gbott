@@ -24,7 +24,7 @@ async def mute(_, message: Message):
         return
 
     if user_id == BOT_ID:
-        await message.reply("Yup! Let me just ban myself. Yay!")
+        await message.reply("Yup! Let me just mute myself. Yay!")
         return
 
     if not await can_restrict_member(message, user_id):
