@@ -71,3 +71,68 @@ source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
 # Install dependencies
 pip3 install -U -r requirements.txt
+```
+
+---
+
+## Configuration
+
+### Edit Configuration Files
+
+1. **Open `Emilia/config.py`**:
+    - Set up all required variables, such as bot tokens, API keys, and database credentials.
+  
+    **Example variables to set:**
+    ```python
+    API_ID = "<Your API ID>"
+    API_HASH = "<Your API Hash>"
+    BOT_TOKEN = "<Your Bot Token>"
+    ```
+
+2. **Optional Settings**:
+   - Copy the configuration from `config.py` to the `config` variable inside `Emilia/tele/clone.py`, but **leave any values inside `{}` empty**.
+   - Alternatively, you may use **environment variables** to set sensitive data for better security.
+
+---
+
+## Running the Bot
+
+### Run Directly
+
+After configuring the bot, you can run it with:
+
+```bash
+python3 -m Emilia
+```
+
+For any deployment issues, feel free to contact the [Spiral Tech Division](https://t.me/SpiralTechDivision). Running bot: [Emilia](https://t.me/Elf_Robot)
+
+---
+
+## Contributing
+
+Join us in making Emilia even better!
+
+1. **Fork this repository**.
+2. **Create a new branch**: `git checkout -b dev`.
+3. **Implement changes** or add new features.
+4. **Commit changes**: `git commit -m 'Add new feature'`.
+5. **Push to your branch**: `git push origin dev`.
+6. **Open a pull request** to share your improvements!
+
+For detailed guidelines, please refer to our [Contributing Guidelines](CONTRIBUTING.md).
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Credits
+
+- [ArshCypherZ](https://github.com/ArshCypherZ)
+- [Pranav Ajay](https://github.com/itspranavajay)
+
+---
