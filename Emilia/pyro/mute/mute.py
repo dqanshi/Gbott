@@ -27,7 +27,7 @@ async def mute(client, message):
     user_id = user_info.id
 
     if user_id == BOT_ID:
-        await message.reply("Yup! Let me just ban myself. Yay!")
+        await message.reply("Yup! Let me just mute myself. Yay!")
         return
 
     if not await isBotAdmin(message):
