@@ -10,7 +10,7 @@ from pyrogram import idle
 
 from Emilia import LOGGER, anibot, create_indexes, pgram, telethn, ORIGINAL_EVENT_LOOP, db, start_session
 from Emilia.info import ALL_MODULES
-from Emilia.tele.clone import clone_start_up
+#from Emilia.tele.clone import clone_start_up
 
 HELP_MSG = "Click the button below to get help menu in your pm ~"
 START_MSG = "**Hie Senpai ~ UwU** I am well and alive ;)"
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     try:
         if ORIGINAL_EVENT_LOOP: # Main Bot
             os.chdir("/app") # Change to your directory where the bot is located on the server
-            asyncio.get_event_loop().run_until_complete(asyncio.gather(clone_start_up(), gae()))
+            asyncio.get_event_loop().run_until_complete(asyncio.gather((), gae()))
         else:
             asyncio.get_event_loop().run_until_complete(gae()) # Clone Bot
         telethn.run_until_disconnected()
