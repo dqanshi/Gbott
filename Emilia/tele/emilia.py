@@ -7,14 +7,14 @@ from telethon import events
 from Emilia import telethn, ORIGINAL_EVENT_LOOP
 
 OWO = [
-    "Emilia is always here for my Senpai >w<",
+    "Angel is always here for my Senpai >w<",
     "You called for me? :p",
     "*bites*",
     "nya~ i am here!!!",
     "*listens*",
     "I came only for you <3",
     "Want me to pat you? You sneaky lil fox!",
-    "Yes, I am Emilia",
+    "Yes, I am Angel",
     "Nobody calls me by my name, I am supreme :p",
     "Well well, I came, now what?",
     "nya nya nyaaaaa",
@@ -77,7 +77,7 @@ OWO = [
 ]
 
 
-@telethn.on(events.NewMessage(pattern="(?i)Emilia$"))
+@telethn.on(events.NewMessage(pattern="(?i)Angel$"))
 async def Emi_(m: events.NewMessage):
     if not ORIGINAL_EVENT_LOOP:
         return
