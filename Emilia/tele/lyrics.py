@@ -1,4 +1,4 @@
- import urllib.parse
+import urllib.parse
 from requests import get
 from lyricsgenius import Genius
 from telethon import Button
