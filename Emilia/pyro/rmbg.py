@@ -10,7 +10,7 @@ from pyrogram import Client
 from Emilia import custom_filter
 from Emilia.helper.disable import disable
 
-REMOVE_BG_API_KEY = "vBTqsW1weqiNraoa8L33QNt8"
+REMOVE_BG_API_KEY = "FA2srzQAMS9YQo8uWK98xNwu"
 
 
 async def check_filename(filroid):
