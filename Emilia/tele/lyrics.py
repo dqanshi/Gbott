@@ -1,4 +1,4 @@
-import urllib.parse
+ import urllib.parse
 from requests import get
 from lyricsgenius import Genius
 from telethon import Button
@@ -9,7 +9,7 @@ from Emilia.utils.decorators import *
 from Emilia.custom_filter import register
 from telethon import Button
 
-token = "_n604o_cEemM85tf6W0LkzVVItj8kjCijqKc4b1nlT96lX2evhoqHz6E4FX3MGhf"
+token = "Cv5zZuDhhnRuICHuxLYPIe5_w72nXljuuGpwZAggeOb62WUO3nhWd7L13HbWVFo5"
 genius = Genius(token)
 
 @usage("/lyrics [song name]")
