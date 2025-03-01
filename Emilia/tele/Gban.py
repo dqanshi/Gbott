@@ -1,175 +1,130 @@
 import asyncio
 from datetime import datetime
 from telethon import events
-from telethon.errors import BadRequestError
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
-from Emilia import telethn, OWNER_ID,DEV_USERS, db
 
+from Emilia import telethn, OWNER_ID, DEV_USERS, db
+
+# Define allowed users (Owners & Developers)
+AUTH_USERS = [OWNER_ID] + DEV_USERS if isinstance(DEV_USERS, list) else [OWNER_ID]
+
+# MongoDB collection for storing GBan data
 GBAN_COLLECTION = db["gban_users"]
 
-BANNED_RIGHTS = ChatBannedRights(
-    until_date=None,
-    view_messages=True,
-    send_messages=True,
-    send_media=True,
-    send_stickers=True,
-    send_gifs=True,
-    send_games=True,
-    send_inline=True,
-    embed_links=True,
-)
+# Ban and Unban Rights
+BANNED_RIGHTS = ChatBannedRights(until_date=None, view_messages=True)
+UNBAN_RIGHTS = ChatBannedRights(until_date=None)
 
-UNBAN_RIGHTS = ChatBannedRights(
-    until_date=None,
-    view_messages=None,
-    send_messages=None,
-    send_media=None,
-    send_stickers=None,
-    send_gifs=None,
-    send_games=None,
-    send_inline=None,
-    embed_links=None,
-)
-
-AUTH_USERS = [OWNER_ID] + [DEV_USERS]
-
+# Get bot's admin groups
 async def get_admin_groups():
-    """Fetches groups where the bot has admin rights."""
     groups = []
     async for dialog in telethn.iter_dialogs():
-        if dialog.is_group or dialog.is_channel:
+        if dialog.is_group:
             try:
                 chat = await telethn.get_entity(dialog.id)
-                permissions = await telethn.get_permissions(chat, "me")
-                if permissions.is_admin and permissions.ban_users:
+                if chat.admin_rights:
                     groups.append(chat.id)
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"[ERROR] Could not fetch group {dialog.id}: {e}")
     return groups
 
-async def is_gbanned(user_id):
-    """Checks if a user is globally banned."""
-    return bool(GBAN_COLLECTION.find_one({"user_id": user_id}))
+# Fetch user details from event
+async def get_user(event):
+    if event.is_reply:
+        replied_msg = await event.get_reply_message()
+        return replied_msg.sender_id
+    args = event.text.split()
+    if len(args) < 2:
+        return None
+    try:
+        user = await telethn.get_entity(args[1])
+        return user.id
+    except:
+        return None
 
-async def add_gban(user_id, reason):
-    """Adds a user to the global ban list."""
-    GBAN_COLLECTION.update_one(
-        {"user_id": user_id},
-        {"$set": {"reason": reason, "timestamp": datetime.utcnow()}},
-        upsert=True,
-    )
-
-async def remove_gban(user_id):
-    """Removes a user from the global ban list."""
-    GBAN_COLLECTION.delete_one({"user_id": user_id})
-
-@telethn.on(events.NewMessage(pattern="^/gban(?: |$)(.*)"))
-async def gban(event):
-    """Global ban command."""
+# Global Ban Command
+@telethn.on(events.NewMessage(pattern="^/gban ?(.*)"))
+async def global_ban(event):
     if event.sender_id not in AUTH_USERS:
-        return
-    
-    reply = await event.get_reply_message()
-    args = event.pattern_match.group(1)
-    reason = args if args else "No reason provided"
-    
-    if reply:
-        user_id = reply.sender_id
-    else:
-        try:
-            user_id = int(args.split()[0])
-            reason = " ".join(args.split()[1:]) or "No reason provided"
-        except ValueError:
-            return await event.reply("Reply to a user or provide a valid user ID.")
+        return await event.reply("❌ **You don't have permission to use this command!**")
+
+    user_id = await get_user(event)
+    if not user_id:
+        return await event.reply("⚠️ **Reply to a user or provide a user ID to gban.**")
 
     if user_id in AUTH_USERS:
-        return await event.reply("You can't gban other developers or the owner.")
+        return await event.reply("⚠️ **You cannot gban an authorized user!**")
 
-    if await is_gbanned(user_id):
-        return await event.reply(f"This user is already globally banned.\n**Reason:** {reason}")
+    reason = event.pattern_match.group(1) or "No reason provided"
+    existing = GBAN_COLLECTION.find_one({"user_id": user_id})
 
-    await add_gban(user_id, reason)
-    
+    if existing:
+        return await event.reply(f"⚠️ **User is already globally banned!**\n📝 **Reason:** `{existing['reason']}`")
+
+    GBAN_COLLECTION.insert_one({"user_id": user_id, "reason": reason, "timestamp": datetime.utcnow()})
+
     groups = await get_admin_groups()
     banned_count = 0
 
     for group in groups:
         try:
             await telethn(EditBannedRequest(group, user_id, BANNED_RIGHTS))
-            await asyncio.sleep(0.5)
             banned_count += 1
-        except BadRequestError:
-            continue
+        except Exception as e:
+            print(f"[ERROR] Failed to ban in {group}: {e}")
 
-    await event.reply(
-        f"✅ **User Globally Banned**\n\n"
-        f"👤 **User:** [{user_id}](tg://user?id={user_id})\n"
-        f"🔒 **Banned in:** {banned_count} groups\n"
-        f"📌 **Reason:** {reason}"
-    )
-    
-    await telethn.send_message(
-        user_id,
-        f"⚠️ **You have been globally banned!**\n\n"
-        f"👮 **Banned by:** [{event.sender_id}](tg://user?id={event.sender_id})\n"
-        f"📌 **Reason:** {reason}\n"
-        f"🔒 **Affected Groups:** {banned_count}"
-    )
+    await event.reply(f"✅ **User has been globally banned!**\n👤 **User ID:** `{user_id}`\n📝 **Reason:** `{reason}`\n🔹 **Banned in:** `{banned_count}` groups")
 
-@telethn.on(events.NewMessage(pattern="^/ungban(?: |$)(.*)"))
-async def ungban(event):
-    """Global unban command."""
+    # Notify the banned user
+    try:
+        await telethn.send_message(user_id, f"🚫 **You have been globally banned!**\n📝 **Reason:** `{reason}`")
+    except:
+        pass
+
+# Global Unban Command
+@telethn.on(events.NewMessage(pattern="^/ungban ?(.*)"))
+async def global_unban(event):
     if event.sender_id not in AUTH_USERS:
-        return
-    
-    reply = await event.get_reply_message()
-    args = event.pattern_match.group(1)
-    
-    if reply:
-        user_id = reply.sender_id
-    else:
-        try:
-            user_id = int(args.split()[0])
-        except ValueError:
-            return await event.reply("Reply to a user or provide a valid user ID.")
+        return await event.reply("❌ **You don't have permission to use this command!**")
 
-    if not await is_gbanned(user_id):
-        return await event.reply("This user is not in the global ban list.")
+    user_id = await get_user(event)
+    if not user_id:
+        return await event.reply("⚠️ **Reply to a user or provide a user ID to ungban.**")
 
-    await remove_gban(user_id)
-    
+    existing = GBAN_COLLECTION.find_one({"user_id": user_id})
+    if not existing:
+        return await event.reply("⚠️ **User is not globally banned!**")
+
+    GBAN_COLLECTION.delete_one({"user_id": user_id})
+
     groups = await get_admin_groups()
     unbanned_count = 0
 
     for group in groups:
         try:
             await telethn(EditBannedRequest(group, user_id, UNBAN_RIGHTS))
-            await asyncio.sleep(0.5)
             unbanned_count += 1
-        except BadRequestError:
-            continue
+        except Exception as e:
+            print(f"[ERROR] Failed to unban in {group}: {e}")
 
-    await event.reply(
-        f"✅ **User Globally Unbanned**\n\n"
-        f"👤 **User:** [{user_id}](tg://user?id={user_id})\n"
-        f"🔓 **Unbanned in:** {unbanned_count} groups"
-    )
-    
-    await telethn.send_message(
-        user_id,
-        f"✅ **You have been globally unbanned!**\n\n"
-        f"🔓 **Unbanned in:** {unbanned_count} groups"
-    )
+    await event.reply(f"✅ **User has been globally unbanned!**\n👤 **User ID:** `{user_id}`\n🔹 **Unbanned in:** `{unbanned_count}` groups")
 
-@telethn.on(events.ChatAction)
-async def check_gban(event):
-    """Checks if a joining user is globally banned and re-bans them."""
-    if event.user_joined or event.user_added:
-        user_id = event.user_id
-        if await is_gbanned(user_id):
-            try:
-                await telethn(EditBannedRequest(event.chat_id, user_id, BANNED_RIGHTS))
-                await event.reply(f"🚫 [{user_id}](tg://user?id={user_id}) is globally banned and was re-banned.")
-            except BadRequestError:
-                pass
+    # Notify the unbanned user
+    try:
+        await telethn.send_message(user_id, "✅ **You have been globally unbanned!**")
+    except:
+        pass
+
+# List GBanned Users
+@telethn.on(events.NewMessage(pattern="^/gbanlist$"))
+async def list_gbans(event):
+    gbanned_users = list(GBAN_COLLECTION.find({}))
+    if not gbanned_users:
+        return await event.reply("📃 **No users are globally banned.**")
+
+    text = "📜 **Globally Banned Users:**\n"
+    for user in gbanned_users:
+        text += f"👤 `{user['user_id']}` | 📝 `{user['reason']}`\n"
+
+    await event.reply(text)
