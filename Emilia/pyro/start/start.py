@@ -10,7 +10,7 @@ from Emilia.pyro.greetings.captcha.text_captcha import textCaptchaRedirect
 from Emilia.pyro.notes.private_notes import note_redirect
 from Emilia.pyro.rules.rules import rulesRedirect
 from Emilia.utils.decorators import *
-from Emilia.tele.clone import startpic
+#from Emilia.tele.clone import startpic
 
 START_TEXT = """
 Welcome to [{} :3]({})
