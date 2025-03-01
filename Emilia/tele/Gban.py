@@ -4,7 +4,7 @@ from telethon import events
 from telethon.errors import BadRequestError
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
-from Emilia import telethn, OWNER_ID,DEV_USERS, db ,
+from Emilia import telethn, OWNER_ID,DEV_USERS, db
 
 GBAN_COLLECTION = db["gban_users"]
 
