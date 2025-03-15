@@ -1,3 +1,4 @@
+import os
 from pyrogram import Client
 from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -13,10 +14,32 @@ from Emilia.utils.decorators import *
 #from Emilia.tele.clone import startpic
 
 START_TEXT = """
-Welcome to [{} :3]({})
-
-Use the buttons buttons or /help to checkout even more!
+*Hello {} !*
+✪ I'm princess {}
+────────────────────────
+✪ Hit /help to see my available commands.
 """
+
+
+buttons = [
+    [
+        InlineKeyboardButton(text=" Add Me ", url=f"https://t.me/{BOT_USERNAME}?startgroup=true",),
+        InlineKeyboardButton(text=" OWNER ", url="t.me/am_dq_fan"),
+    ],
+    
+]
+
+HELP_STRINGS = f"""
+*» {BOT_NAME} FEATURES*
+Click on the button bellow to get description about specifics command."""
+
+
+DEWMI_IMG = os.environ.get('DEWMI_IMG', None)
+if DEWMI_IMG is None:
+    DEWMI_IMG = "https://telegra.ph/file/617328845268b005da3a1.jpg"
+else:
+  DEWMI_IMG = DEWMI_IMG   
+
 
 
 @Client.on_message(custom_filter.command(commands="start"))
@@ -34,11 +57,11 @@ async def starttt(client, message):
                     InlineKeyboardButton("OWNER", url=f"https://t.me/am_dq_fan"),],            
             ]
             
-            await message.send_photo(
-                START_TEXT.format(BOT_NAME, START_PIC),
-                reply_markup=InlineKeyboardMarkup(buttons),
-                disable_web_page_preview=False
-            )
+    await message.reply_photo(
+        photo=DEWMI_IMG,
+        caption=START_TEXT.format(escape_markdown(first_name), BOT_NAME),
+        reply_markup=InlineKeyboardMarkup(buttons),
+    )
 
         elif message.chat.type != ChatType.PRIVATE:
             await message.reply("Hey there, ping me in my PM to get help!")
