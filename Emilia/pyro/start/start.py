@@ -13,6 +13,11 @@ from Emilia.pyro.rules.rules import rulesRedirect
 from Emilia.utils.decorators import *
 #from Emilia.tele.clone import startpic
 
+
+from pyrogram.helpers import escape_markdown  # ✅ Import escape_markdown
+
+
+
 START_TEXT = """
 *Hello {} !*
 ✪ I'm princess {}
@@ -20,20 +25,7 @@ START_TEXT = """
 ✪ Hit /help to see my available commands.
 """
 
-
-
-HELP_STRINGS = f"""
-*» {BOT_NAME} FEATURES*
-Click on the button bellow to get description about specifics command."""
-
-
-DEWMI_IMG = os.environ.get('DEWMI_IMG', None)
-if DEWMI_IMG is None:
-    DEWMI_IMG = "https://telegra.ph/file/617328845268b005da3a1.jpg"
-else:
-  DEWMI_IMG = DEWMI_IMG   
-
-
+DEWMI_IMG = os.environ.get("DEWMI_IMG", "https://telegra.ph/file/617328845268b005da3a1.jpg")
 
 @Client.on_message(custom_filter.command(commands="start"))
 @leavemute
@@ -41,24 +33,26 @@ else:
 async def starttt(client, message):
     if len(message.text.split()) == 1:
         if message.chat.type == ChatType.PRIVATE:
+            first_name = message.from_user.first_name  # ✅ Define first_name
+
             buttons = [
                 [InlineKeyboardButton("Help", callback_data="help_back")],
                 [
-                    InlineKeyboardButton(
-                        "Support", url=f"https://t.me/{SUPPORT_CHAT}"
-                    ),
-                    InlineKeyboardButton("OWNER", url=f"https://t.me/am_dq_fan"),],            
+                    InlineKeyboardButton("Support", url=f"https://t.me/{SUPPORT_CHAT}"),
+                    InlineKeyboardButton("OWNER", url="https://t.me/am_dq_fan"),
+                ],
             ]
-            
-           await message.reply_photo(
-               photo=DEWMI_IMG,
-               caption=START_TEXT.format(escape_markdown(first_name), BOT_NAME),
-               reply_markup=InlineKeyboardMarkup(buttons),
+
+            await message.reply_photo(  # ✅ Fix indentation
+                photo=DEWMI_IMG,
+                caption=START_TEXT.format(escape_markdown(first_name), BOT_NAME),
+                reply_markup=InlineKeyboardMarkup(buttons),
             )
 
-        elif message.chat.type != ChatType.PRIVATE:
+        else:
             await message.reply("Hey there, ping me in my PM to get help!")
 
+    
 
     if len(message.text.split()) > 1:
         user = message.from_user.id
