@@ -15,13 +15,6 @@ from Emilia.utils.decorators import *
 START_TEXT = """
 Welcome to [{} :3]({})
 
-This bot give varieties of features such as
-➩ Group Management
-➩ Spammer Protection
-➩ Fun like chatbot
-➩ Clone, Ranking, AI System
-➩ Anime Loaded Modules
-
 Use the buttons buttons or /help to checkout even more!
 """
 
@@ -41,7 +34,7 @@ async def starttt(client, message):
                     InlineKeyboardButton("OWNER", url=f"https://t.me/am_dq_fan"),],            
             ]
             
-            await message.reply_text(
+            await message.reply_photo(
                 START_TEXT.format(BOT_NAME, START_PIC),
                 reply_markup=InlineKeyboardMarkup(buttons),
                 disable_web_page_preview=False,
@@ -144,7 +137,7 @@ async def callback_query_handler(client, callback_query):
 
 
 clone_help = """
-Emilia Clones are exact replicas of @Elf_Robot but with a personalized name and profile picture, ensuring enhanced performance and stability.
+angel Clones are exact replicas of @am_angel_bit but with a personalized name and profile picture, ensuring enhanced performance and stability.
 
 Clones inherit all functionalities, updates, and database entries from the original bot. When switching between clones in a group, there's no need to reconfigure settings.
 
@@ -154,7 +147,7 @@ Clones inherit all functionalities, updates, and database entries from the origi
 3. Choose a name for your clone.
 4. Select a username for your clone.
 5. Copy the API token provided by @BotFather.
-6. Send the API token to Emilia via private message using `/clone [apitokenhere]`. Ensure to remove '[ ]'.
+6. Send the API token to Angel via private message using `/clone [apitokenhere]`. Ensure to remove '[ ]'.
 7. You're all set!
 
 To modify the profile picture of your clone, send /setuserpic to @BotFather, choose the clone, and upload the new image.
