@@ -14,9 +14,12 @@ from Emilia.utils.decorators import *
 #from Emilia.tele.clone import startpic
 
 
-from pyrogram.enums import ParseMode
-from pyrogram.utils import escape_markdown  # ✅ Correct import
+import re
 
+def escape_markdown(text: str) -> str:
+    """Escapes special characters in Markdown."""
+    escape_chars = r'\*_`\['  # Characters that need escaping
+    return re.sub(f'([{escape_chars}])', r'\\\1', text)
 
 
 START_TEXT = """
