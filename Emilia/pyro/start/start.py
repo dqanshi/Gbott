@@ -34,9 +34,10 @@ async def starttt(client, message):
                     InlineKeyboardButton("OWNER", url=f"https://t.me/am_dq_fan"),],            
             ]
             
-            await message.reply_photo(
+            await message.send_photo(
                 START_TEXT.format(BOT_NAME, START_PIC),
                 reply_markup=InlineKeyboardMarkup(buttons),
+                disable_web_page_preview=False
             )
 
         elif message.chat.type != ChatType.PRIVATE:
