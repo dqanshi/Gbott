@@ -75,7 +75,7 @@ async def gae():
 
 if __name__ == "__main__":
     try:
-        os.chdir("/root/gbott")  # Change to your bot's directory
+        os.chdir("/root/Gbott")  # Change to your bot's directory
         asyncio.get_event_loop().run_until_complete(asyncio.gather(gae()))  # Run the main bot
         telethn.run_until_disconnected()
     except KeyboardInterrupt:
