@@ -37,7 +37,6 @@ async def starttt(client, message):
             await message.reply_photo(
                 START_TEXT.format(BOT_NAME, START_PIC),
                 reply_markup=InlineKeyboardMarkup(buttons),
-                disable_web_page_preview=False,
             )
 
         elif message.chat.type != ChatType.PRIVATE:
