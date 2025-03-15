@@ -14,7 +14,8 @@ from Emilia.utils.decorators import *
 #from Emilia.tele.clone import startpic
 
 
-from pyrogram.helpers import escape_markdown  # ✅ Import escape_markdown
+from pyrogram.enums import ParseMode
+from pyrogram.utils import escape_markdown  # ✅ Correct import
 
 
 
