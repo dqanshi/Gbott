@@ -50,10 +50,10 @@ async def starttt(client, message):
                     InlineKeyboardButton("OWNER", url=f"https://t.me/am_dq_fan"),],            
             ]
             
-    await message.reply_photo(
-        photo=DEWMI_IMG,
-        caption=START_TEXT.format(escape_markdown(first_name), BOT_NAME),
-        reply_markup=InlineKeyboardMarkup(buttons),
+        await message.reply_photo(
+            photo=DEWMI_IMG,
+            caption=START_TEXT.format(escape_markdown(first_name), BOT_NAME),
+            reply_markup=InlineKeyboardMarkup(buttons),
     )
 
         elif message.chat.type != ChatType.PRIVATE:
