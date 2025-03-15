@@ -21,13 +21,6 @@ START_TEXT = """
 """
 
 
-buttons = [
-    [
-        InlineKeyboardButton(text=" Add Me ", url=f"https://t.me/{BOT_USERNAME}?startgroup=true",),
-        InlineKeyboardButton(text=" OWNER ", url="t.me/am_dq_fan"),
-    ],
-    
-]
 
 HELP_STRINGS = f"""
 *» {BOT_NAME} FEATURES*
