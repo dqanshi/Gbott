@@ -54,7 +54,7 @@ async def starttt(client, message):
                photo=DEWMI_IMG,
                caption=START_TEXT.format(escape_markdown(first_name), BOT_NAME),
                reply_markup=InlineKeyboardMarkup(buttons),
-    )
+            )
 
         elif message.chat.type != ChatType.PRIVATE:
             await message.reply("Hey there, ping me in my PM to get help!")
