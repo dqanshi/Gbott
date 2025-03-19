@@ -33,18 +33,10 @@ UNBAN_RIGHTS = ChatBannedRights(
 )
 
 async def get_admin_groups():
+    """Fetch groups where the bot is an admin using stored group IDs (MongoDB)."""
     groups = []
-    try:
-        async for dialog in telethn.iter_dialogs():
-            if dialog.is_group:
-                try:
-                    chat = await telethn.get_entity(dialog.id)
-                    if hasattr(chat, 'admin_rights') and chat.admin_rights and chat.admin_rights.ban_users:
-                        groups.append(chat.id)
-                except Exception:
-                    continue
-    except Exception as e:
-        print(f"Error fetching admin groups: {str(e)}")
+    async for group in db["admin_groups"].find({}, {"chat_id": 1}):
+        groups.append(group["chat_id"])
     return groups
 
 @telethn.on(events.NewMessage(pattern=r"^/gban(?: |$)(.*)?", from_users=DEV_USERS))
@@ -77,7 +69,7 @@ async def global_ban(event):
     except Exception as e:
         return await event.reply(f"❌ Error fetching user: {str(e)}")
 
-    if GBAN_DB.find_one({"user_id": int(user_id)}):
+    if await GBAN_DB.find_one({"user_id": int(user_id)}):
         return await event.reply(f"⚠️ [{name}](tg://user?id={user_id}) is already globally banned.")
 
     groups = await get_admin_groups()
@@ -93,7 +85,7 @@ async def global_ban(event):
             continue
 
     try:
-        GBAN_DB.insert_one({
+        await GBAN_DB.insert_one({
             "user_id": int(user_id),
             "name": name,
             "banned_at": int(time.time()),
@@ -130,7 +122,7 @@ async def global_unban(event):
     if user_id == OWNER_ID or user_id in DEV_USERS:
         return await event.reply("🚫 This user is a developer or owner, they are not globally banned.")
 
-    ban_data = GBAN_DB.find_one({"user_id": int(user_id)})
+    ban_data = await GBAN_DB.find_one({"user_id": int(user_id)})
     if not ban_data:
         return await event.reply("⚠️ This user is not globally banned.")
 
@@ -146,7 +138,7 @@ async def global_unban(event):
         except Exception:
             continue
 
-    GBAN_DB.delete_one({"user_id": int(user_id)})
+    await GBAN_DB.delete_one({"user_id": int(user_id)})
 
     response = f"✅ Unbanned [{ban_data['name']}](tg://user?id={user_id}) from {unbanned_count} groups!"
     try:
@@ -156,7 +148,9 @@ async def global_unban(event):
 
 @telethn.on(events.NewMessage(pattern=r"^/gbanlist$", from_users=DEV_USERS))
 async def gban_list(event):
-    banned_users = list(GBAN_DB.find())
+    banned_users = []
+    async for user in GBAN_DB.find():
+        banned_users.append(user)
 
     if not banned_users:
         return await event.reply("📜 No users are globally banned.")
@@ -177,7 +171,7 @@ async def auto_gban(event):
         return
         
     user_id = event.user_id
-    ban_data = GBAN_DB.find_one({"user_id": int(user_id)})
+    ban_data = await GBAN_DB.find_one({"user_id": int(user_id)})
 
     if ban_data:
         try:
@@ -190,4 +184,4 @@ async def auto_gban(event):
             return
         except Exception as e:
             print(f"Error auto-banning user {user_id} in chat {event.chat_id}: {str(e)}")
-            
+    
