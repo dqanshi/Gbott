@@ -42,9 +42,9 @@ async def aloha(client: Client, message: Message):
             await message.reply_photo(
                 photo=photos[0].file_id,
                 caption=text,
-                parse_mode="html"
+                parse_mode="HTML"
             )
         else:
-            await message.reply_text(text, parse_mode="html", disable_web_page_preview=True)
+            await message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
     except:
-        await message.reply_text(text, parse_mode="html", disable_web_page_preview=True)
+        await message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
