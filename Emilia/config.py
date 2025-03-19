@@ -17,7 +17,7 @@ class Config(object):
     MONGO_DB_URL = "mongodb+srv://Dqanshi:an12if..@cluster0.awr1r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" # MongoDB URL from MongoDB Atlas
 
     SUPPORT_CHAT = "dbots_supportchat" # Support Chat Username
-    UPDATE_CHANNEL = "SpiralUpdates" # Update Channel Username
+    UPDATE_CHANNEL = "dbots_supportchat" # Update Channel Username
     START_PIC = "https://telegra.ph/file/617328845268b005da3a1.jpg" # Start Image
     DEV_USERS = [1721373213,912095781,1105084940,1205330781,862852632,999873027,644412009,865643300,1769085034,1833664399,1276998600,1555340229,1647428346,1476128450,1734396873,2019529859,1926765024,5574601095,6248131995,5260523032] # Dev Users
     TOKEN = "1060722149:AAGEWokvznyR4dHrau1LFVTHs2iN4x_thgg" # Bot Token from @BotFather
