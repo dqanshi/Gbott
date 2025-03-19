@@ -20,7 +20,17 @@ BAN_RIGHTS = ChatBannedRights(
     embed_links=True
 )
 
-UNBAN_RIGHTS = ChatBannedRights()
+UNBAN_RIGHTS = ChatBannedRights(
+    until_date=None,
+    view_messages=False,
+    send_messages=False,
+    send_media=False,
+    send_stickers=False,
+    send_gifs=False,
+    send_games=False,
+    send_inline=False,
+    embed_links=False
+)
 
 async def get_admin_groups():
     groups = []
