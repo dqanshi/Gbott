@@ -1,7 +1,7 @@
 import html
 from telethon import events
 from telethon.tl.functions.users import GetFullUserRequest
-
+from Emilia import telethn
 ALOHA_ID = 5260523032  # Aloha's Telegram ID
 
 @telethn.on(events.NewMessage(pattern="^/aloha$"))
