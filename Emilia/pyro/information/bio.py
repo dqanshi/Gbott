@@ -193,7 +193,7 @@ async def _info(_, message):
             pass
 
     if user_id == OWNER_ID:
-        text += "\n\nHe is my cute neko Arshhhhhhhhh <3"
+        text += "\n\nHe is my cute Owner <3"
 
     elif user_id in DEV_USERS:
         text += "\n\nOne of my developers, respect ++"
@@ -201,11 +201,11 @@ async def _info(_, message):
     if await banned(user_id):
         chec = us.get_info(user_id)
         text += "<b>\n\nVanitas:\n</b>"
-        text += "<b>This person is banned in @SpamWatchingBot!</b>"
+        text += "<b>This person is banned in @am_angel_bot!</b>"
         text += f"\nReason: <pre>{chec['reason']}</pre>"
-        text += "\nAppeal at @VanitasSupport"
+        text += "\nAppeal at @dbs_support_group"
     else:
-        text += "<b>\n\n@SpamWatchingBot:</b> Not banned"
+        text += "<b>\n\n@am_angel_bot:</b> Not banned"
 
     if user.photo:
         pic = await _.download_media(user.photo.big_file_id)
@@ -216,7 +216,7 @@ async def _info(_, message):
 
 
 @usage("/ginfo [chat id/username]")
-@example("/ginfo @SpiralTechDivision")
+@example("/ginfo @dangerbots")
 @description(
     "This will fetch a group chat's information. It may not work if the bot is banned or have not seen the particular chat."
 )
