@@ -18,9 +18,9 @@ loha = [
     ]
 
 
-@telethn.on(events.NewMessage(pattern="(?i)Angel$"))
+@telethn.on(events.NewMessage(pattern="(?i)Alohal$"))
 async def Emi_(m: events.NewMessage):
     if not ORIGINAL_EVENT_LOOP:
         return
-    uwu = random.choice(OWO)
-    await m.reply(uwu)
+    uwu = random.choice(loha)
+    await m.reply(loha)
