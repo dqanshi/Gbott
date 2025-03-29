@@ -4,7 +4,7 @@ from telethon import events
 
 from Emilia import telethn, ORIGINAL_EVENT_LOOP
 
-GDNIGHT = [
+GDNIGHT_MSGS = [
     "`മരിക്കേണ്ട വ്യക്തിക്ക് ഒരു വഴിയേയുള്ളൂ, എന്നാൽ ജീവിതത്തിൽ വരാൻ ആഗ്രഹിക്കുന്ന വ്യക്തിക്ക് നിരവധി വഴികളുണ്ട്. മധുര സ്വപ്നങ്ങൾ കാണുക. നന്നായി ഉറങ്ങുക. ശുഭരാത്രി`",
     "`എല്ലാ ദിവസവും അനുഭവത്തോടെ അവസാനിക്കുന്നു. നിങ്ങൾക്ക് ഇന്ന് ധാരാളം അനുഭവങ്ങൾ ഉണ്ടായി എന്ന് പ്രതീക്ഷിക്കുന്നു. ജോലി കഴിഞ്ഞ് ഉറങ്ങാൻ പോകുന്ന സമയം. ദിവസം അവസാനിച്ചു, മറ്റൊരു ദിവസം ഇനിയും ഉണ്ട്. സുഹൃത്തേ,ശുഭരാത്രി`",
     "`സൂര്യൻ പോകുമ്പോൾ ലോകത്തെ പ്രകാശിപ്പിക്കുന്നതിന് ചന്ദ്രൻ അതിന്റെ സൗന്ദര്യത്തിലും തണുപ്പിലും മങ്ങുന്നു. ദിവസം കഴിയുമ്പോൾ നിങ്ങളുടെ ഉറക്കം നിങ്ങളെപ്പോലെ മൃദുലമാകുമെന്ന പ്രതീക്ഷയോടെ നിങ്ങൾക്ക് അൽപ്പം വിശ്രമം നൽകുക. !`",
@@ -43,56 +43,12 @@ GDNIGHT = [
 ]
 
 
-@telethn.on(events.NewMessage(pattern="(?i)goodnight$"))
-async def Emi_(m: events.NewMessage):
+
+
+# Combine all similar patterns into one handler
+@telethn.on(events.NewMessage(pattern=r"(?i)^(good\s?night|gdnight|Gdnight|GDnight)$"))
+async def good_night_handler(event):
     if not ORIGINAL_EVENT_LOOP:
         return
-    GDNIGHT = random.choice(GDNIGHT)
-    await m.reply(GDNIGHT)
-
-
-@telethn.on(events.NewMessage(pattern="(?i)good night$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDNIGHT = random.choice(GDNIGHT)
-    await m.reply(GDNIGHT)
-
-
-
-@telethn.on(events.NewMessage(pattern="(?i)gdnight$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDNIGHT = random.choice(GDNIGHT)
-    await m.reply(GDNIGHT)
-
-@telethn.on(events.NewMessage(pattern="(?i)good night$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDNIGHT = random.choice(GDNIGHT)
-    await m.reply(GDNIGHT)
-
-@telethn.on(events.NewMessage(pattern="(?i)gdnight$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDNIGHT = random.choice(GDNIGHT)
-    await m.reply(GDNIGHT)
-
-@telethn.on(events.NewMessage(pattern="(?i)GDnight$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDNIGHT = random.choice(GDNIGHT)
-    await m.reply(GDNIGHT)
-
-
-
-@telethn.on(events.NewMessage(pattern="(?i)Gdnight$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDNIGHT = random.choice(GDNIGHT)
-    await m.reply(GDNIGHT)
+    msg = random.choice(GDNIGHT_MSGS)  # Pick a random message
+    await event.reply(msg)
