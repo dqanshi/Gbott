@@ -5,15 +5,15 @@ from telethon import events
 from Emilia import telethn, ORIGINAL_EVENT_LOOP
 
 loha = [
-"odra"
-"poda"
-"kilavan"
-"kilavi"
-"run"
-"mari iri angot"
-"thenga"
-"vazha"
-"mandi"
+"odra",
+"poda",
+"kilavan",
+"kilavi",
+"run",
+"mari iri angot",
+"thenga",
+"vazha",
+"mandi",
 "pottan"
     ]
 
