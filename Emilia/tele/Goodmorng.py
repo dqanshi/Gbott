@@ -44,46 +44,8 @@ GDMORNING = [
 
 
 
-@telethn.on(events.NewMessage(pattern="(?i)goodmorning$"))
-async def Emi_(m: events.NewMessage):
+@telethn.on(events.NewMessage(pattern=r"(?i)^(good\s?morning|gdmorning|gd\s?morning)$"))
+async def good_morning_handler(event: events.NewMessage):
     if not ORIGINAL_EVENT_LOOP:
         return
-    GDMORNING = random.choice(GDMORNING)
-    await m.reply(GDMORNING)
-
-@telethn.on(events.NewMessage(pattern="(?i)good morning$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDMORNING = random.choice(GDMORNING)
-    await m.reply(GDMORNING)
-
-@telethn.on(events.NewMessage(pattern="(?i)morning$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDMORNING = random.choice(GDMORNING)
-    await m.reply(GDMORNING)
-
-@telethn.on(events.NewMessage(pattern="(?i)Goodmorning$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDMORNING = random.choice(GDMORNING)
-    await m.reply(GDMORNING)
-
-
-
-@telethn.on(events.NewMessage(pattern="(?i)gdmorning$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDMORNING = random.choice(GDMORNING)
-    await m.reply(GDMORNING)
-
-@telethn.on(events.NewMessage(pattern="(?i)GDmorning$"))
-async def Emi_(m: events.NewMessage):
-    if not ORIGINAL_EVENT_LOOP:
-        return
-    GDMORNING = random.choice(GDMORNING)
-    await m.reply(GDMORNING)
+    await event.reply(random.choice(GDMORNING))
