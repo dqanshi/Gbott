@@ -18,7 +18,7 @@ loha = [
     ]
 
 
-@telethn.on(events.NewMessage(pattern="(?i)Alohal$"))
+@telethn.on(events.NewMessage(pattern="(?i)Aloha$"))
 async def Emi_(m: events.NewMessage):
     if not ORIGINAL_EVENT_LOOP:
         return
