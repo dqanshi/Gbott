@@ -22,5 +22,5 @@ loha = [
 async def Emi_(m: events.NewMessage):
     if not ORIGINAL_EVENT_LOOP:
         return
-    uwu = random.choice(loha)
-    await m.reply(loha)
+    one = random.choice(loha)
+    await m.reply(one)
